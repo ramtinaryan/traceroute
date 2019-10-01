@@ -1,0 +1,9 @@
+[
+	{
+		"src":"1",
+		"dst":"5",
+		"tos":"10",
+		"path":["1","4","5"],
+		"packet":{"srcMac":"00:00:de:ad:be:ef","dstMac":"00:00:de:ad:be:ef","srcIp":"1.1.1.1","dstIp":"2.2.2.2"}
+	}
+]
