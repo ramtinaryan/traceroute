@@ -2,10 +2,14 @@ import json
 
 fileName = "example_topology"
 OFName = "openFlow_Format"
-f = open(fileName, "r")
-lines = f.readlines()
-f.close()
+
+with open(fileName, "r") as f:
+    lines = f.readlines()
+    f.close()
+
 rule = {}
+ruleList = list()
+
 for line in lines:
     fields = line.split()
     if len(fields) == 8:  # 0,1,2,4,5,6
@@ -25,5 +29,7 @@ for line in lines:
         rule['actions'].append({
             "type": "OUTPUT",
             "port": outport})
-        with open(OFName, 'a') as OFfile:
-            json.dump(rule, OFfile)
+        ruleList.append(rule)
+with open(OFName, 'w', newline='\n') as OFfile:
+    json.dump(ruleList, OFfile, indent=2, separators=(',', ':'))
+    OFfile.close()
