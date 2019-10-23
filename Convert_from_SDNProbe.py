@@ -19,7 +19,7 @@ for line in lines:
         inport = fields[4]
         outport = fields[5]
         priority = fields[6]
-        rule['dpid'] = id
+        rule['dpid'] = sw
         rule['priority'] = priority
         rule['cookie'] = 0
         rule['table_id'] = 0
