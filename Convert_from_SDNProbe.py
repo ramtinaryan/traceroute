@@ -1,13 +1,12 @@
 import json
 
 fileName = "example_topology"
-OFName = "openFlow_Format"
+OFName = "openFlowEntries.json"
 
 with open(fileName, "r") as f:
     lines = f.readlines()
     f.close()
 
-rule = {}
 ruleList = list()
 
 for line in lines:
@@ -19,16 +18,18 @@ for line in lines:
         inport = fields[4]
         outport = fields[5]
         priority = fields[6]
-        rule['dpid'] = sw
-        rule['priority'] = priority
+        rule = {}
+        rule['dpid'] = int(sw) + 1
+        rule['priority'] = int(priority)
         rule['cookie'] = 0
         rule['table_id'] = 0
-        rule['match'] = {"in_port": inport,
-                         "nw_src": ip}
+        rule['match'] = {"in_port": int(inport),
+                         "nw_src": ip,
+                         "dl_type": 2048}
         rule['actions'] = []
         rule['actions'].append({
             "type": "OUTPUT",
-            "port": outport})
+            "port": int(outport)})
         ruleList.append(rule)
 with open(OFName, 'w', newline='\n') as OFfile:
     json.dump(ruleList, OFfile, indent=2, separators=(',', ':'))
