@@ -4,7 +4,7 @@ from mininet.net import Mininet
 from mininet.cli import CLI
 from mininet.node import RemoteController, Node
 import json
-
+import sys
 
 fileName = "topology.json"
 """
@@ -28,22 +28,24 @@ class TopoGenerator(Topo):
     def __init__(self, netConfig):
         # Initialize topology
         Topo.__init__(self)
-        switchList = list()
+        switchList = dict()
         switch_No = netConfig["switch_No"]
-        for indx in range(1, switch_No + 1):
+        for indx in netConfig["switchs"]:
             switch = self.addSwitch('sw%d' % (
                 indx), protocols=["OpenFlow13"])
             host = self.addHost('h%d' % (indx))
             self.addLink(host, switch)
-            switchList.append(switch)
+            switchList[str(indx)] = 'sw' + str(indx)
         for link in netConfig["links"]:
             nodes = link.split(':')
-            self.addLink(switchList[int(nodes[0]) - 1],
-                         switchList[int(nodes[1]) - 1])
+            self.addLink(switchList.get(nodes[0]), switchList.get(nodes[1]))
 
 
 if __name__ == '__main__':
     topos = {'topology': (lambda: TopoGenerator())}
+    if len(sys.argv) == 2:
+        fileName = str(sys.argv[1])
+    print("fileName: ", fileName)
     networkConfig = readConfig()
     topo = TopoGenerator(networkConfig)
     net = Mininet(topo=topo,
