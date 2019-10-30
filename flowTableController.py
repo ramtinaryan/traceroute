@@ -37,6 +37,19 @@ def readInputFile():
         OFEntriesList = OFEntries
     return OFEntriesList
 
+# GET ALL DATAPATH IDs / SWITCH IDs
+
+
+def getAllDatapathID():
+    """ Get all datapath IDs (list of integers) """
+    url = proto + ctrl_ip + port + getDatapaths
+    try:
+        req = requests.get(url)
+        if req.status_code is 200:
+            return json.loads(req.text)
+    except requests.exceptions.RequestException as e:
+        print("Server error: %s" % e)
+
 
 def addToFlowTable():
     print("Add the New Rule/s ...")
@@ -115,30 +128,50 @@ def clearFlowTable():
     print("Cleaning is Finished Successfully!")
 
 
-def operations(option):
-    if option == 'a':
+def clearAllFlowTables():
+    for dpid in getAllDatapathID():
+        print("Clear the Flowtable of Switch %d ..." % (dpid))
+        url = proto + ctrl_ip + port + clearEntries
+        url = url + str(dpid)
+        try:
+            req = requests.delete(url)
+        except requests.exceptions.RequestException as e:
+            print("Server error %s " % e)
+            return -1
+        print("Cleaning is Finished Successfully!")
+
+# def operations(option):
+
+
+def operations(optionList):
+    if optionList[1] == '-a':
         addToFlowTable()
-    elif option == 'r':
+    elif optionList[1] == '-r':
         removeFromFlowTable()
-    elif option == 'm':
+    elif optionList[1] == '-m':
         modifyFlowTable()
-    elif option == 'c':
-        clearFlowTable()
+    elif optionList[1] == '-c':
+        if optionList[2] == 'all':
+            clearAllFlowTables()
+        else:
+            switchId = str(optionList[2])
+            clearFlowTable()
+    else:
+        print("Wrong input !\n \
+            Correct input format: operatoin [inputfile].\n \
+            operatoin: '-a': add, '-r': remove, '-m': modify, '-c id [no inputfile]':clean flow table in sw_id, 'c all [no inputfile]': clean all flow tables")
 
 
 if __name__ == '__main__':
     '''Clean the output file'''
     with open(outputFileName, "w") as f:
         f.close()
-    if len(sys.argv) == 4 or len(sys.argv) == 5:
-        inputFileName = str(sys.argv[1])
-        outputFileName = str(sys.argv[2])
-        if len(sys.argv) == 5:
-            switchId = str(sys.argv[4])
+    optionList = sys.argv
+    if len(sys.argv) == 3 or len(sys.argv) == 4:
+        inputFileName = str(sys.argv[len(sys.argv) - 1])
         exeCommand = exeCommand + outputFileName
-        operations(str(sys.argv[3]))
-
+        operations(optionList)
     else:
         print("Wrong input !\n \
-            Correct input format: inputfile outputfile operatoin.\n \
-            operatoin: 'a': add, 'r': remove, 'm': modify, 'c id':clean flow table in sw_id")
+            Correct input format: operatoin [inputfile].\n \
+            operatoin: '-a': add [inputfile], '-r': remove [inputfile], '-m': modify [inputfile], '-c id [no inputfile]':clean flow table in sw_id, 'c all [no inputfile]': clean all flow tables")
