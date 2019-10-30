@@ -3,7 +3,7 @@ import json
 
 
 def getQueries():
-	fileName="/home/ramary/ryu/ryu/app/query.json"
+	fileName="/home/ramary/tracerout/query.json"
 	listOfQueries=list()
 	with open(fileName, 'r') as f:
 	    loaded_queries = json.load(f)
