@@ -24,6 +24,17 @@ def readConfig():
     return config
 
 
+def int2dpid(dpid):
+    try:
+        dpid = hex(dpid)[2:]
+        dpid = '0' * (16 - len(dpid)) + dpid
+        return dpid
+    except IndexError:
+        raise Exception('Unable to derive default datapath ID - '
+                        'please either specify a dpid or use a '
+                        'canonical switch name such as s23.')
+
+
 class TopoGenerator(Topo):
     def __init__(self, netConfig):
         # Initialize topology
@@ -32,7 +43,7 @@ class TopoGenerator(Topo):
         switch_No = netConfig["switch_No"]
         for indx in netConfig["switchs"]:
             switch = self.addSwitch('sw%d' % (
-                indx), protocols=["OpenFlow13"])
+                indx), dpid=int2dpid(indx), protocols=["OpenFlow13"])
             host = self.addHost('h%d' % (indx))
             self.addLink(host, switch)
             switchList[str(indx)] = 'sw' + str(indx)
