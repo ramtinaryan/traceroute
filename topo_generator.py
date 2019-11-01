@@ -44,7 +44,7 @@ class TopoGenerator(Topo):
         for indx in netConfig["switchs"]:
             switch = self.addSwitch('sw%d' % (
                 indx), dpid=int2dpid(indx), protocols=["OpenFlow13"])
-            host = self.addHost('h%d' % (indx))
+            host = self.addHost('h%d' % (indx), mac="00:00:00:00:00:%02x" % (indx))
             self.addLink(host, switch)
             switchList[str(indx)] = 'sw' + str(indx)
         for link in netConfig["links"]:
