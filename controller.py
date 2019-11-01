@@ -36,6 +36,7 @@ class ctrlapp(app_manager.RyuApp):
         self.pullFlowTable = 0
         self.allFlowTables = dict()
         self.packetGenTime = 0
+        self.installCatchRuleTime = 0
         self.skipFirstMiss = 0
         self.dataPathsList = dict()
         self.tos=0
@@ -87,6 +88,20 @@ class ctrlapp(app_manager.RyuApp):
                     self.isTablesPopulated = True
 
 
+        # Reset Test  
+        if eth.ethertype == ether_types.ETH_TYPE_ARP:
+            if (pkt.get_protocols(arp.arp)[0].src_ip == "10.0.0.1" and 
+            pkt.get_protocols(arp.arp)[0].dst_ip == "10.0.0.30" and 
+            pkt.get_protocols(arp.arp)[0].src_mac == "00:00:00:00:00:01"):
+                if self.isTesting:
+                    self.isTesting=False
+                    print("*********************************************************************")
+                    print("*********************************************************************")
+                    print("*********************************************************************")
+                    print("**************    TEST IS RESET SUCESSFULLY !!!    ******************")
+                    print("*********************************************************************")
+                    print("*********************************************************************")
+
         # Check trigger conditions to start testing
         if (eth.ethertype == ether_types.ETH_TYPE_ARP and not self.isTesting):
             if (pkt.get_protocols(arp.arp)[0].src_ip == "10.0.0.1" and 
@@ -137,6 +152,7 @@ class ctrlapp(app_manager.RyuApp):
                         print ("TOTAL SENT " , self.totalSent)
                         print ("RECEIVED LAST " , self.totalReceived)
                         print ("TOTAL OVERLAPS: " , self.totalOverlap)
+                        print ("CATCH-RULE INSTALLATION TIME: " , format(self.installCatchRuleTime - self.starttime, '.5f'))
                         print ("TIME ON LINK: " , format(time.time() - self.starttime - self.packetGenTime, '.5f'))
                         print ("TOTAL RUNTIME: " , format(time.time() - self.starttime, '.5f'))
             '''    else:
@@ -183,7 +199,7 @@ class ctrlapp(app_manager.RyuApp):
             # Install catch rules on neighbours
             allNeighbours = self.getNeighborsByID(sw.dp.id)
             for neigh in allNeighbours: # id
-                self.addCatchRuleByID(int(neigh.lstrip("0")))
+                self.addCatchRuleByID(int(neigh,16))
 
             # Scrape and sort flowtable
             flowtable = gather.getMatchData(sw.dp.id)
@@ -250,17 +266,18 @@ class ctrlapp(app_manager.RyuApp):
        # Install catch rules on neighbours
        allNeighbours=self.getExpectedPathNeighbors(query["path"])
        for neigh in allNeighbours: # id
-           self.addCatchRuleByID(int(neigh.lstrip("0")))
+#           self.addCatchRuleByID(int(neigh.lstrip("0")))
+           self.addCatchRuleByID(int(neigh,16))
        print("the neighbor: ",allNeighbours)
        self.addCatchRuleByID(int(query["dst"]))
-  	
+       self.installCatchRuleTime=time.time()
   		# Scrape and sort flowtable
        ''' 
        flowtable = gather.getMatchData(sw.dp.id)
        flowtable = sorted(flowtable, key=generator.sortKey, reverse=True)
        '''
-       pkt = generator.makeCustomTestPacket(query["packet"],self.tos)
        self.generateTime = time.time()
+       pkt = generator.makeCustomTestPacket(query["packet"],self.tos)
        '''
        # add packet to list
        entry["packet"] = {"ip" : pkt.get_protocol(ipv4.ipv4())}
@@ -288,7 +305,7 @@ class ctrlapp(app_manager.RyuApp):
            self.checkUnicastRule(entry, pkt, sw)
        '''
        self.newCheckUnicastRule(pkt, sw)
-       self.packetGenTime = self.generateTime - self.starttime
+       self.packetGenTime = time.time() - self.generateTime #- self.starttime
        print ("PACKET GEN TIME: " , format(self.packetGenTime, '.5f'))
   	
   		# done testing?
@@ -371,9 +388,10 @@ class ctrlapp(app_manager.RyuApp):
         datapathNeighbors=self.getAllDatapathNeighbors()
         for sw in path:
             neighbor.update(datapathNeighbors.get(int(sw)))
+
         pathList=list(path)
         for i in range(len(pathList)):
-            pathList[i]="0"*(len(list(neighbor)[0])-len(pathList[i]))+pathList[i] #convert expath foramt to neighbor format
+            pathList[i]="0"*(len(list(neighbor)[0])-len(str(hex(int(pathList[i]))).split('x')[1])) + str(hex(int(pathList[i]))).split('x')[1] #convert expath foramt to neighbor format
 
         neighbor.difference_update(set(pathList))
         return neighbor
