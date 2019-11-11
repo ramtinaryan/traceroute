@@ -5,7 +5,6 @@ OFName = "openFlowEntries.json"
 
 with open(fileName, "r") as f:
     lines = f.readlines()
-    f.close()
 
 ruleList = list()
 
@@ -33,4 +32,3 @@ for line in lines:
         ruleList.append(rule)
 with open(OFName, 'w', newline='\n') as OFfile:
     json.dump(ruleList, OFfile, indent=2, separators=(',', ':'))
-    OFfile.close()
