@@ -30,7 +30,7 @@ def readInputFile():
     OFEntriesList = list()
     with open(inputFileName, 'r') as f:
         OFEntries = json.load(f)
-        f.close()
+
     if type(OFEntries) is dict:
         OFEntriesList.append(OFEntries)
     else:
@@ -58,13 +58,13 @@ def addToFlowTable():
     for p in OFEntries:
         with open(outputFileName, "a+") as f:
             f.write(curlCommand + "\n")
-            f.close()
+
         with open(outputFileName, 'a', newline='\n') as OFfile:
             json.dump(p, OFfile, indent=2, separators=(',', ':'))
-            OFfile.close()
+            OFfil
         with open(outputFileName, "a") as f:
             f.write(url + "\n")
-            f.close()
+
     process = subprocess.Popen(exeCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     if error is None:
@@ -80,13 +80,13 @@ def removeFromFlowTable():
     for p in OFEntries:
         with open(outputFileName, "a+") as f:
             f.write(curlCommand + "\n")
-            f.close()
+
         with open(outputFileName, 'a', newline='\n') as OFfile:
             json.dump(p, OFfile, indent=2, separators=(',', ':'))
-            OFfile.close()
+            OFfil
         with open(outputFileName, "a") as f:
             f.write(url + "\n")
-            f.close()
+
     process = subprocess.Popen(exeCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     if error is None:
@@ -102,13 +102,13 @@ def modifyFlowTable():
     for p in OFEntries:
         with open(outputFileName, "a+") as f:
             f.write(curlCommand + "\n")
-            f.close()
+
         with open(outputFileName, 'a', newline='\n') as OFfile:
             json.dump(p, OFfile, indent=2, separators=(',', ':'))
-            OFfile.close()
+            OFfil
         with open(outputFileName, "a") as f:
             f.write(url + "\n")
-            f.close()
+
     process = subprocess.Popen(exeCommand.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     if error is None:
@@ -165,7 +165,7 @@ def operations(optionList):
 if __name__ == '__main__':
     '''Clean the output file'''
     with open(outputFileName, "w") as f:
-        f.close()
+
     optionList = sys.argv
     if len(sys.argv) == 3 or len(sys.argv) == 4:
         inputFileName = str(sys.argv[len(sys.argv) - 1])
