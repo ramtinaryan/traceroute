@@ -28,7 +28,6 @@ def createTopo(path_length, neighbor_count, ctrIP, ctrPort, outputFile):
 
     with open(outPutFileName, 'w', newline='\n') as topoFile:
         json.dump(topo, topoFile, indent=3, separators=(',', ':'))
-        topoFile.close()
 
 
 if __name__ == '__main__':
