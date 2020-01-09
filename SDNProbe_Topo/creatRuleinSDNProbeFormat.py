@@ -120,10 +120,10 @@ def topoRules(switchCount,portCount, ruleCount):
 
 if __name__ == '__main__':
 
-    switchCount="5"
-    portCount=4
-    ruleCount=10
-    topo="1 2 3 4 5\n2 1 3 4 5\n3 1 2 4 5\n4 1 2 3 5\n5 1 2 3 4 \n"
+    switchCount="50"
+    portCount=3
+    ruleCount=50
+    topo="1 2 16 \n2 1 3 17\n3 2 4 18\n4 3 5 19\n5 4 20\n6 5 7 21\n7 6 8 22\n8 7 9 23\n9 8 10 24\n10 9 11 25\n11 10 12 26\n12 11 13 27\n13 12 14 28\n14 13 15 29\n15 14 16 30\n16 15 17 30\n17 16 18 30\n18 17 19 30\n19 18 20 30\n20 19 21 30\n21 20 22 46\n22 21 23 47\n23 22 24 48\n24 23 25 49\n25 24 50\n"
     with open(outputFileName, 'w') as f:
         f.write(switchCount+"\n")
         f.write(topo)
