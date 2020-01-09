@@ -1,0 +1,138 @@
+[
+{
+    "dpid":1,
+    "priority":30000,
+    "cookie":0,
+    "table_id":0,
+    "match":{
+      "in_port":"ANY",
+      "nw_src":"172.128.30.0/24",
+      "dl_type":2048
+    },
+    "actions":[
+      {
+        "type":"OUTPUT",
+        "port":3
+      }
+    ]
+},
+{
+    "dpid":1,
+    "priority":30000,
+    "cookie":0,
+    "table_id":0,
+    "match":{
+      "in_port":"ANY",
+      "nw_src":"172.128.40.0/24",
+      "dl_type":2048
+    },
+    "actions":[
+      {
+        "type":"OUTPUT",
+        "port":4
+      }
+    ]
+},
+{
+    "dpid":1,
+    "priority":30000,
+    "cookie":0,
+    "table_id":0,
+    "match":{
+      "in_port":"ANY",
+      "nw_src":"172.128.20.0/24",
+      "dl_type":2048
+    },
+    "actions":[
+      {
+        "type":"OUTPUT",
+        "port":2
+      }
+    ]
+},
+{
+    "dpid":3,
+    "priority":30000,
+    "cookie":0,
+    "table_id":0,
+    "match":{
+      "in_port":2,
+      "nw_src":"172.128.30.40",
+      "dl_type":2048
+    },
+    "actions":[
+      {
+        "type":"OUTPUT",
+        "port":4
+      }
+    ]
+},
+{
+    "dpid":3,
+    "priority":30000,
+    "cookie":0,
+    "table_id":0,
+    "match":{
+      "in_port":2,
+      "nw_src":"172.128.30.50",
+      "dl_type":2048
+    },
+    "actions":[
+      {
+        "type":"OUTPUT",
+        "port":3
+      }
+    ]
+},
+{
+    "dpid":2,
+    "priority":30000,
+    "cookie":0,
+    "table_id":0,
+    "match":{
+      "in_port":2,
+      "nw_src":"172.128.20.50",
+      "dl_type":2048
+    },
+    "actions":[
+      {
+        "type":"OUTPUT",
+        "port":4
+      }
+    ]
+},
+{
+    "dpid":2,
+    "priority":30000,
+    "cookie":0,
+    "table_id":0,
+    "match":{
+      "in_port":2,
+      "nw_src":"172.128.20.40",
+      "dl_type":2048
+    },
+    "actions":[
+      {
+        "type":"OUTPUT",
+        "port":3
+      }
+    ]
+},
+{
+    "dpid":4,
+    "priority":30000,
+    "cookie":0,
+    "table_id":0,
+    "match":{
+      "in_port":2,
+      "nw_src":"172.128.40.50",
+      "dl_type":2048
+    },
+    "actions":[
+      {
+        "type":"OUTPUT",
+        "port":5
+      }
+    ]
+}
+]
